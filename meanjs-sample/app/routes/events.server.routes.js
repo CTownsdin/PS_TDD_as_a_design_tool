@@ -1,5 +1,5 @@
 'use strict';
-var ctrl = require('.../controllers/event.server.controller.js');
+var ctrl = require('../controllers/event.server.controller.js');
 
 module.exports = function(app){
   app.route('/events').get(ctrl.getAllEvents);
