@@ -2,7 +2,8 @@
 
 describe('Events Service,', function(){
   var $httpBackend,
-    service;
+    service,
+    eventsUrl = 'http://localhost:3000/events';
 
   beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
@@ -13,7 +14,7 @@ describe('Events Service,', function(){
 
   describe('When getting all events,', function() {
     it('Should make a call to the API', function() {
-      $httpBackend.expectGET('http://localhost:3000/events')
+      $httpBackend.expectGET(eventsUrl)
         .respond(200);
 
       service.getAllEvents();
@@ -22,7 +23,7 @@ describe('Events Service,', function(){
     });
 
     it('Should send an error when API fails', function(){
-      $httpBackend.whenGET('http://localhost:3000/events').respond(500);
+      $httpBackend.whenGET(eventsUrl).respond(500);
 
       var err;
 
@@ -33,6 +34,21 @@ describe('Events Service,', function(){
       $httpBackend.flush();
 
       expect(err).toBeDefined();
+    });
+
+    it('Should send data when API is successful', function() {
+      $httpBackend.whenGET(eventsUrl)
+        .response(200, [{name: 'test event'}]);
+
+      var data;
+
+      service.getAllEvents().then(function(d){
+        data = d;
+      });
+
+      $httpBackend.flush();
+
+      expect(data[0].name).toEqual('test event');
     });
 
   });
